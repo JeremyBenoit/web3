@@ -1,36 +1,6 @@
-const Header = (props) => {
-  return (
-    <h1>{props.course}</h1>
-  )
-}
-
-const Part = (props) => {
-  return(
-    <p>
-      {props.part} {props.exercises}
-    </p>
-  )
-}
-
-const Content = (props) => {
-  return(
-    <div>
-      <Part part={props.parts[0][0]} exercises={props.parts[0][1]}/>
-      <Part part={props.parts[1][0]} exercises={props.parts[1][1]}/>
-      <Part part={props.parts[2][0]} exercises={props.parts[2][1]}/>
-    </div>
-  )
-}
-
-const Total = (props) => {
-  let sum = 0;
-  props.exercises.forEach(element => {
-    sum += element
-  });
-  return (
-    <p>Number of exercises {sum}</p>
-  )
-}
+import Header from "./components/Header/Header";
+import Content from "./components/Content/Content";
+import Total from "./components/Total/Total";
 
 const App = () => {
   const course = 'Half Stack application development'
