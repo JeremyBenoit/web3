@@ -5,24 +5,25 @@ import {useState} from "react";
 const App = () => {
   const [ counter, setCounter ] = useState(0)
 
-  const increase = () => setCounter(counter + 1)
-  const decrease = () => setCounter(counter - 1)
-  const reset = () => setCounter(0)
+  const changeCount = (delta) => setCounter(counter+delta)
 
   return (
     <div>
       <Display counter={counter}/>
       <Button
-          onClick={increase}
-          text='Plus'
+          changeCount={changeCount}
+          text={'Plus'}
+          delta={+1}
       />
       <Button
-          onClick={reset}
-          text='Zero'
+          changeCount={changeCount}
+          text={'Zero'}
+          delta={-counter}
       />
       <Button
-          onClick={decrease}
-          text='Minus'
+          changeCount={changeCount}
+          text={'Minus'}
+          delta={-1}
       />
     </div>
   )
