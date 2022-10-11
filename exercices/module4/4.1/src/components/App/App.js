@@ -6,9 +6,10 @@ import FormInput from "../FormInput/FormInput";
 
 function App() {
     const [persons, setPersons] = useState([
-        {name: 'Arto Hellas'}
+        {name: 'Arto Hellas', number: '040-1234567'}
     ])
     const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
 
     const formHandler = (e) => {
         e.preventDefault()
@@ -20,7 +21,7 @@ function App() {
             }
         }
         if(alreadyExists) alert(`${newName} is already added to phonebook`)
-        else setPersons([...persons, {name: newName}])
+        else setPersons([...persons, {name: newName, number: newNumber}])
     }
 
     return (
@@ -28,11 +29,12 @@ function App() {
             <h2>Phonebook</h2>
             <form onSubmit={formHandler}>
                 <FormInput value={newName} changeValue={(e) => setNewName(e.target.value)} label='name'/>
+                <FormInput value={newNumber} changeValue={(e) => setNewNumber(e.target.value)} label='number'/>
                 <Button text='add'/>
             </form>
             <h2>Numbers</h2>
             <div>
-                {persons.map(person => <Person name={person.name}/>)}
+                {persons.map(person => <Person person={person}/>)}
             </div>
         </div>
     )
