@@ -3,11 +3,10 @@ import {useState} from "react";
 import Button from "components/Button/Button";
 import Person from "components/Person/Person";
 import FormInput from "../FormInput/FormInput";
+import axios from 'axios'
 
-function App() {
-    const [persons, setPersons] = useState([
-        {name: 'Arto Hellas', number: '040-1234567'}
-    ])
+function App({data}) {
+    const [persons, setPersons] = useState(data)
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
 
@@ -15,13 +14,21 @@ function App() {
         e.preventDefault()
         let alreadyExists = false
         for (const person of persons) {
-            if(person.name === newName) {
+            if (person.name === newName) {
                 alreadyExists = true
                 break;
             }
         }
-        if(alreadyExists) alert(`${newName} is already added to phonebook`)
-        else setPersons([...persons, {name: newName, number: newNumber}])
+        if (alreadyExists) alert(`${newName} is already added to phonebook`)
+        else {
+            axios
+                .post('http://localhost:3001/persons', {name: newName, number: newNumber})
+                .then(response => {
+                    if (response.status === 200 || response.status === 201) {
+                        setPersons([...persons, {name: newName, number: newNumber}])
+                    }
+                })
+        }
     }
 
     return (
