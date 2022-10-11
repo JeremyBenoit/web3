@@ -1,10 +1,6 @@
-const Button = ({addPerson,text}) => {
-    const onClickHandler = (e) => {
-        e.preventDefault()
-        addPerson();
-    }
+const Button = ({text}) => {
     return <div>
-        <button onClick={onClickHandler}>{text}</button>
+        <button>{text}</button>
     </div>
 }
 export default Button
