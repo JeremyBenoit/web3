@@ -5,28 +5,46 @@ import Person from "components/Person/Person";
 import FormInput from "components/FormInput/FormInput";
 import personsService  from "services/persons"
 
-function App({data}) {
-    const [persons, setPersons] = useState(data)
+function App() {
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
 
+    useEffect(() => {
+        personsService
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })
+    }, [])
+
     const addNumber = (e) => {
         e.preventDefault()
-        let alreadyExists = false
-        for (const person of persons) {
-            if (person.name === newName) {
-                alreadyExists = true
-                break;
+
+        const personFound = persons.find(p => p.name===newName)
+        if (personFound !== undefined) {
+            const confirmed = window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`)
+            if(confirmed){
+                const person = {
+                    name:newName,
+                    number: newNumber
+                }
+                personsService
+                    .update(personFound.id, person)
+                    .then(numberAdded => {
+                        persons[persons.indexOf(personFound)] = person
+                        setPersons(persons)
+                        setNewName('')
+                        setNewNumber('')
+                    })
             }
-        }
-        if (alreadyExists) alert(`${newName} is already added to phonebook`)
-        else {
+        } else {
             const person = {
                 name:newName,
                 number: newNumber
             }
             personsService
-                .addNumber(person)
+                .add(person)
                 .then(numberAdded => {
                     setPersons(persons.concat(numberAdded))
                     setNewName('')
@@ -40,7 +58,7 @@ function App({data}) {
         const confirmed = window.confirm(`Delete ${person.name}`)
         if (confirmed) {
             personsService
-                .deleteNumber(person.id)
+                .remove(person.id)
                 .then(numberDeleted => {
                     setPersons(persons.filter(p => p.id!==person.id))
                 })

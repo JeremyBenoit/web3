@@ -9,14 +9,21 @@ const getAll = () => {
         })
 }
 
-const addNumber = newObject => {
+const add = newObject => {
     return axios.post(baseUrl, newObject)
         .then(response => {
             return response.data
         })
 }
 
-const deleteNumber = id => {
+const update = (id,newObject) => {
+    return axios.put(`${baseUrl}/${id}`, newObject)
+        .then(response => {
+            return response.data
+        })
+}
+
+const remove = id => {
     return axios.delete(`${baseUrl}/${id}`)
         .then(response => {
             return response.data
@@ -25,6 +32,7 @@ const deleteNumber = id => {
 
 export default {
     getAll: getAll,
-    addNumber: addNumber,
-    deleteNumber: deleteNumber,
+    add: add,
+    remove: remove,
+    update: update,
 }
