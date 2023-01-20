@@ -134,40 +134,32 @@ const typeDefs = gql`
 `
 
 const resolvers = {
+    Author: {
+      bookCount: (root) => books.filter(b => b.author === root.name).length
+    },
     Query: {
         bookCount: () => books.length,
         authorCount: () => authors.length,
         allBooks: (root, args) => {
-            if (!args.author && !args.genre) return books
-            const byAuthor = (book) =>
-                args.author === book.author ? book : !book
-            const byGenre = (book) =>
-                book.genres.find(b => b === args.genre) ? book : !book
-            if (!args.author)
-                return books.filter(byGenre)
-            if (!args.genre)
-                return books.filter(byAuthor)
-            return books.filter(byAuthor).filter(byGenre)
+            let ret = [...books]
+            if(args.author) ret = ret.filter(b => b.author === args.author)
+            if(args.genre) ret = ret.filter(b => b.genres.includes(args.genre))
+            return ret
         },
-        allAuthors: () => authors.map(a => {
-            a.bookCount = (books.filter(b => b.author === a.name)).length
-            return a
-        })
+        allAuthors: () => authors
     },
     Mutation: {
         addBook: (root, args) => {
             const book = {...args, id: uuid()}
-            if (!authors.find(a => a.name === book.author))
-                authors = authors.concat({name: book.author, id: uuid()})
-            books = books.concat(book)
+            books.push(book)
+            if (!authors.find(a => a.name === args.author))
+                authors.push({name: args.author, id: uuid()})
             return book
         },
         editAuthor: (root, args) => {
             const author = authors.find(a => a.name === args.name)
-            if (!author) return null
-            const updatedAuthor = {...author, born: args.setBornTo}
-            authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
-            return updatedAuthor
+            if (author) author.born = args.setBornTo
+            return author
         }
     }
 }
